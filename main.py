@@ -5,7 +5,7 @@ from fastapi import FastAPI, Depends, HTTPException
 
 import crud
 import schemas
-from db.database import SessionLocal
+from database import SessionLocal
 
 
 app = FastAPI()
@@ -80,12 +80,19 @@ def create_book(
 
 @app.get("/books/", response_model=list[schemas.Book])
 def get_books(
-    author_id: int = None,
-    skip: int = 0,
-    limit: int = 10,
-    db: Session = Depends(get_db)
+        skip: int = 0,
+        limit: int = 10,
+        db: Session = Depends(get_db)
 ) -> list[schemas.Book]:
-    return crud.get_books(db=db, author_id=author_id, skip=skip, limit=limit)
+    return crud.get_books(db=db, skip=skip, limit=limit)
+
+
+@app.get("/books/{author_id}/", response_model=list[schemas.Book])
+def get_books_by_author_id(
+        author_id: int = None,
+        db: Session = Depends(get_db)
+) -> list[schemas.Book]:
+    return crud.get_books_by_author_id(db=db, author_id=author_id)
 
 
 if __name__ == "__main__":

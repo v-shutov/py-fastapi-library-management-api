@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 import schemas
-from db import models
+import models
 
 
 def get_author_by_name(db: Session, name: str) -> models.Author:
@@ -51,6 +51,16 @@ def get_book_by_title(db: Session, title: str) -> models.Book:
         ).filter(
             models.Book.title == title
         ).first()
+    )
+
+
+def get_books_by_author_id(db: Session, author_id: int) -> list[models.Book]:
+    return (
+        db.query(
+            models.Book
+        ).filter(
+            models.Book.author_id == author_id
+        ).all()
     )
 
 
